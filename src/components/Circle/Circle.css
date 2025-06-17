@@ -1,0 +1,13 @@
+.circle {
+    height: 70px;
+    width: 70px;
+    border: 3px dashed var(--color-sky-500);
+    border-radius: 50%;
+    animation: spin 20s linear infinite;
+}
+
+@keyframes spin {
+    100% {
+        rotate: 360deg;
+    }
+}
