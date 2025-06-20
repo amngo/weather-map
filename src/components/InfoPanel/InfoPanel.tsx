@@ -1,4 +1,4 @@
-import { ChartLine, Droplets, Info, Star, Wind } from 'lucide-react';
+import { ChartLine, Info, Star } from 'lucide-react';
 import SquareButton from '../buttons/SquareButton';
 import { AnimatePresence, motion } from 'motion/react';
 import Panel from './Panel';
@@ -18,16 +18,16 @@ const ICONS = [
         type: 'forecast' as const,
         label: 'Forecast',
     },
-    {
-        Icon: Droplets,
-        type: 'precipitation' as const,
-        label: 'Precipitation',
-    },
-    {
-        Icon: Wind,
-        type: 'wind' as const,
-        label: 'Wind',
-    },
+    // {
+    //     Icon: Droplets,
+    //     type: 'precipitation' as const,
+    //     label: 'Precipitation',
+    // },
+    // {
+    //     Icon: Wind,
+    //     type: 'wind' as const,
+    //     label: 'Wind',
+    // },
 ];
 type PanelType = 'info' | 'forecast' | 'precipitation' | 'wind';
 
@@ -96,7 +96,7 @@ export default function InfoPanel() {
                         )}
                     </AnimatePresence>
 
-                    <nav className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <div className="bg-primary-foreground p-0.5 rounded shadow">
                             <SquareButton onClick={handleAddToFavorites}>
                                 {favorite ? (
@@ -110,19 +110,19 @@ export default function InfoPanel() {
                             </SquareButton>
                         </div>
 
-                        <ul className="flex flex-col gap-0.5 bg-primary-foreground p-0.5 rounded shadow">
+                        <div className="flex flex-col gap-0.5 bg-primary-foreground p-0.5 rounded shadow">
                             {ICONS.map(({ Icon, type }) => (
-                                <li key={type}>
+                                <div key={type}>
                                     <SquareButton
                                         active={panel === type}
                                         onClick={() => setPanel(type)}
                                     >
                                         <Icon />
                                     </SquareButton>
-                                </li>
+                                </div>
                             ))}
-                        </ul>
-                    </nav>
+                        </div>
+                    </div>
                 </motion.div>
             )}
         </AnimatePresence>

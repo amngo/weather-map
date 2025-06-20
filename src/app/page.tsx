@@ -4,7 +4,7 @@ import HomeScreen from '@/components/HomeScreen';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { MapProvider, Map } from 'react-map-gl/mapbox';
 import { useQuery } from '@tanstack/react-query';
-import { getAirQuality, getWeather } from '@/lib/api';
+import { getAirQuality, getAlerts, getWeather } from '@/lib/api';
 import { WeatherData } from '@/types';
 import { useEffect, useState } from 'react';
 
@@ -31,15 +31,16 @@ export default function Home() {
             const { latitude, longitude } = location;
             const weather = getWeather(latitude, longitude, settings);
             const aq = getAirQuality(latitude, longitude);
+            const alert = getAlerts(latitude, longitude);
             // const boundaries = getBoundaries(latitude, longitude);
-            const [weatherData, airQualityData] = await Promise.all([
-                weather,
-                aq,
-            ]);
+            const [weatherData, airQualityData, alertsData] = await Promise.all(
+                [weather, aq, alert]
+            );
 
             return {
                 ...weatherData,
                 aq: airQualityData,
+                alert: alertsData,
             };
         },
     });

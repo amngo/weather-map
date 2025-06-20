@@ -4,6 +4,7 @@ import MapControl from './MapControl';
 import Settings from './Settings';
 import LocationSearch from './LocationSearch';
 import Favorites from './Favorites';
+import ActiveAlert from './ActiveAlert';
 
 export default function HomeScreen() {
     return (
@@ -18,6 +19,7 @@ export default function HomeScreen() {
             </div>
             <InfoPanel />
             <MapControl />
+            <ActiveAlert />
         </>
     );
 }

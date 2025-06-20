@@ -120,10 +120,98 @@ export interface WeatherData {
             us_aqi: number;
         };
     };
+    alert: WeatherAlertFeature | null;
 }
 
 export interface Settings {
     temperature: 'celsius' | 'fahrenheit';
     windSpeed: 'kmh' | 'mph' | 'ms' | 'kn';
     precipitation: 'mm' | 'inch';
+}
+
+export type Severity = 'Extreme' | 'Severe' | 'Moderate' | 'Minor' | 'Unknown';
+export type Urgency = 'Immediate' | 'Expected' | 'Future' | 'Past' | 'Unknown';
+export type Certainty =
+    | 'Observed'
+    | 'Likely'
+    | 'Possible'
+    | 'Unlikely'
+    | 'Unknown';
+
+export interface WeatherAlertFeatureCollection {
+    '@context': (
+        | string
+        | {
+              '@version': string;
+              wx: string;
+              '@vocab': string;
+          }
+    )[];
+    type: 'FeatureCollection';
+    features: WeatherAlertFeature[];
+    title: string;
+    updated: string;
+}
+
+interface WeatherAlertFeature {
+    id: string;
+    type: 'Feature';
+    geometry: null;
+    properties: WeatherAlertProperties;
+}
+
+interface WeatherAlertProperties {
+    '@id': string;
+    '@type': string;
+    id: string;
+    areaDesc: string;
+    geocode: {
+        SAME: string[];
+        UGC: string[];
+    };
+    affectedZones: string[];
+    references: WeatherAlertReference[];
+    sent: string;
+    effective: string;
+    onset: string;
+    expires: string;
+    ends: string;
+    status: string;
+    messageType: string;
+    category: string;
+    severity: Severity;
+    certainty: Certainty;
+    urgency: Urgency;
+    event: string;
+    sender: string;
+    senderName: string;
+    headline: string;
+    description: string;
+    instruction: string;
+    response: string;
+    parameters: WeatherAlertParameters;
+    scope: string;
+    code: string;
+    language: string;
+    web: string;
+    eventCode: {
+        SAME: string[];
+        NationalWeatherService: string[];
+    };
+}
+
+interface WeatherAlertReference {
+    '@id': string;
+    identifier: string;
+    sender: string;
+    sent: string;
+}
+
+interface WeatherAlertParameters {
+    AWIPSidentifier: string[];
+    WMOidentifier: string[];
+    NWSheadline: string[];
+    BLOCKCHANNEL: string[];
+    VTEC: string[];
+    eventEndingTime: string[];
 }

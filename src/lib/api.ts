@@ -1,4 +1,4 @@
-import { Settings } from '@/types';
+import { Settings, WeatherAlertFeatureCollection } from '@/types';
 
 export async function getGeocoding(q: string) {
     const params = new URLSearchParams({
@@ -92,5 +92,24 @@ export async function getAirQuality(lat: number, lng: number) {
     } catch (error) {
         console.error('Error fetching air quality data:', error);
         throw error;
+    }
+}
+
+export async function getAlerts(lat: number, lng: number) {
+    const params = new URLSearchParams({
+        point: `${lat},${lng}`,
+    });
+
+    try {
+        const response = await fetch(
+            `https://api.weather.gov/alerts/active?${params.toString()}`
+        );
+        const alerts: WeatherAlertFeatureCollection = await response.json();
+
+        if (alerts.features.length === 0) return null;
+
+        return alerts.features[0];
+    } catch {
+        return null;
     }
 }

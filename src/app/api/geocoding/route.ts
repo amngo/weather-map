@@ -6,7 +6,7 @@ export async function GET(request: Request) {
     const params: { [key: string]: string } = {
         access_token: process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN || '',
         q: searchParams.get('q') || '',
-        types: 'place',
+        types: 'place,locality,region,country,postcode,district',
     };
 
     const data = await fetch(

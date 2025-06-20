@@ -4,7 +4,7 @@ import UV from './UV';
 import Wind from './Wind';
 import Humidity from './Humidity';
 import Visibility from './Visibility';
-import MiniForcast from './MiniForecast/MiniForecast';
+import MiniForcast from './MiniForecast';
 import { useAtomValue } from 'jotai';
 import { locationAtom, weatherDataAtom } from '@/atoms';
 import { WEATHER_CODES } from '@/lib/constants';
@@ -30,18 +30,15 @@ export default function Panel() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.5, ease: 'backInOut' }}
-            className="grid grid-cols-2 w-[350px] bg-primary-foreground border rounded-md p-4"
+            className="grid grid-cols-3 w-[350px] bg-primary-foreground border rounded-md p-4"
         >
-            <h2 className="font-semibold text-sm col-span-2 truncate">
+            <h2 className="font-semibold text-sm col-span-3 truncate">
                 {location?.name}
             </h2>
-            {/* <div className="flex justify-between items-center col-span-2">
-                    <h2 className="font-semibold text-sm">{location?.name}</h2>
-                    <Badge variant="destructive">Heat Advisory</Badge>
-                </div> */}
-            <div>
+
+            <div className="col-span-2">
                 <div className="text-xs text-muted-foreground">{datetime}</div>
-                <div className="text-3xl mt-1">
+                <div className="text-4xl my-1">
                     {Math.round(weatherData.current.temperature_2m)}°
                 </div>
                 <div className="text-lg">
@@ -57,7 +54,7 @@ export default function Panel() {
                 className="size-24 self-center justify-self-end"
             />
 
-            <div className="grid grid-cols-2 mt-2 gap-1.5 col-span-2">
+            <div className="grid grid-cols-2 mt-2 gap-1.5 col-span-3">
                 <MiniForcast />
                 <Humidity value={weatherData.current.relative_humidity_2m} />
                 <AQI value={weatherData.aq.current.us_aqi} />
@@ -66,7 +63,7 @@ export default function Panel() {
                     value={weatherData.current.wind_speed_10m}
                     direction={weatherData.current.wind_direction_10m}
                 />
-                <Visibility />
+                <Visibility value={weatherData.current.visibility} />
             </div>
         </motion.section>
     );

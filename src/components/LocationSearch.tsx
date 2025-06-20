@@ -27,7 +27,6 @@ export default function LocationSearch() {
         queryKey: ['suggestions', debouncedValue],
         queryFn: async (): Promise<GeoJSONFeature[]> => {
             const response = await getGeocoding(debouncedValue);
-            console.log('Geocoding response:', response);
             return response.features;
         },
         enabled: !!debouncedValue,
