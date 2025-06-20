@@ -40,7 +40,7 @@ export default function MapControl() {
 
     return (
         <div className="bottom-6 right-4 flex flex-col absolute gap-2">
-            <div className="flex flex-col bg-background rounded shadow p-0.5">
+            <div className="flex flex-col bg-primary-foreground rounded shadow p-0.5">
                 <SquareButton onClick={handleZoomIn}>
                     <Plus />
                 </SquareButton>
@@ -49,7 +49,7 @@ export default function MapControl() {
                 </SquareButton>
             </div>
 
-            <div className="bg-background rounded shadow p-0.5">
+            <div className="bg-primary-foreground rounded shadow p-0.5">
                 <SquareButton onClick={handleFullscreen}>
                     {fullscreen ? <Minimize /> : <Maximize />}
                 </SquareButton>

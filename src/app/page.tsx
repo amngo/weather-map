@@ -1,14 +1,52 @@
 'use client';
-
-import { mapAtom } from '@/atoms';
-import SettingsButton from '@/components/buttons/SettingsButton';
+import { locationAtom, mapAtom, settingsAtom, weatherDataAtom } from '@/atoms';
 import HomeScreen from '@/components/HomeScreen';
-import LocationInput from '@/components/LocationInput';
-import { useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { MapProvider, Map } from 'react-map-gl/mapbox';
+import { useQuery } from '@tanstack/react-query';
+import { getAirQuality, getWeather } from '@/lib/api';
+import { WeatherData } from '@/types';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+    const [mapLoaded, setMapLoaded] = useState(false);
     const setMap = useSetAtom(mapAtom);
+    const setWeatherData = useSetAtom(weatherDataAtom);
+    const settings = useAtomValue(settingsAtom);
+    const location = useAtomValue(locationAtom);
+
+    const { data } = useQuery({
+        enabled: !!location,
+        queryKey: [
+            'weatherData',
+            location?.latitude,
+            location?.longitude,
+            settings,
+        ],
+        queryFn: async (): Promise<WeatherData | null> => {
+            if (!location) {
+                return null;
+            }
+
+            const { latitude, longitude } = location;
+            const weather = getWeather(latitude, longitude, settings);
+            const aq = getAirQuality(latitude, longitude);
+            // const boundaries = getBoundaries(latitude, longitude);
+            const [weatherData, airQualityData] = await Promise.all([
+                weather,
+                aq,
+            ]);
+
+            return {
+                ...weatherData,
+                aq: airQualityData,
+            };
+        },
+    });
+
+    const handleMapLoad = () => {
+        setMapLoaded(true);
+    };
 
     const handleMapMoveStart = () => {
         setMap((prev) => ({
@@ -23,39 +61,36 @@ export default function Home() {
         }));
     };
 
-    return (
-        <div
-            id="main-content"
-            className="p-4 w-screen h-screen bg-background flex flex-col gap-4 items-center"
-        >
-            <div className="grid grid-cols-3 items-center justify-items-center w-full gap-2">
-                <h1>Weather Map</h1>
-                <LocationInput />
-                <SettingsButton />
-            </div>
+    useEffect(() => {
+        if (data) {
+            console.log('Weather data:', data);
+            setWeatherData(data);
+        }
+    }, [data, setWeatherData]);
 
-            <div className="w-full h-full rounded-xl overflow-hidden shadow">
-                <MapProvider>
-                    <Map
-                        onMoveStart={handleMapMoveStart}
-                        onMoveEnd={handleMapMoveEnd}
-                        mapboxAccessToken={
-                            process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
-                        }
-                        initialViewState={{
-                            longitude: -118.2437,
-                            latitude: 34.0522,
-                            zoom: 15,
-                            pitch: 70,
-                            bearing: 0,
-                        }}
-                        style={{ width: '100%', height: '100%' }}
-                        mapStyle="mapbox://styles/mapbox/standard"
-                    >
-                        <HomeScreen />
-                    </Map>
-                </MapProvider>
-            </div>
+    return (
+        <div id="main-content" className="w-screen h-screen relative">
+            <MapProvider>
+                <Map
+                    onLoad={handleMapLoad}
+                    onMoveStart={handleMapMoveStart}
+                    onMoveEnd={handleMapMoveEnd}
+                    mapboxAccessToken={
+                        process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN
+                    }
+                    initialViewState={{
+                        longitude: 0,
+                        latitude: 0,
+                        zoom: 0,
+                        pitch: 70,
+                        bearing: 0,
+                    }}
+                    style={{ width: '100%', height: '100%' }}
+                    mapStyle="mapbox://styles/amngo96/cmc3b1uem004901sr78cwgpi3"
+                >
+                    {mapLoaded && <HomeScreen />}
+                </Map>
+            </MapProvider>
         </div>
     );
 }

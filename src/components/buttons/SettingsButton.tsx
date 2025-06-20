@@ -1,10 +1,15 @@
 import { Settings } from 'lucide-react';
+import { Button } from '../ui/button';
 
-export default function SettingsButton() {
+export default function SettingsButton({ ...props }) {
     return (
-        <div className="bg-background rounded h-8 flex items-center justify-center p-2 hover:bg-gray-100 transition-colors duration-300 ease-in-out cursor-pointer gap-1 border border-gray-200">
+        <Button
+            variant="outline"
+            {...props}
+            className="rounded h-8 flex items-center justify-center p-2 transition-colors duration-300 ease-in-out gap-2 border justify-self-end"
+        >
             <Settings size={14} />
             <span className="font-semibold text-sm">Settings</span>
-        </div>
+        </Button>
     );
 }

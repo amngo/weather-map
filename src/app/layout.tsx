@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Inter, Orbitron, Outfit } from 'next/font/google';
 import './globals.css';
+import QueryProvider from '@/lib/QueryProvider';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -25,7 +26,7 @@ const outfit = Outfit({
 const inter = Inter({
     variable: '--font-inter',
     subsets: ['latin'],
-})
+});
 
 export const metadata: Metadata = {
     title: 'Create Next App',
@@ -40,9 +41,11 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${outfit.variable} ${inter.variable} antialiased`}
+                className={`${geistSans.variable} ${geistMono.variable} ${orbitron.variable} ${outfit.variable} ${inter.variable} antialiased dark`}
             >
-                <main className="mx-auto relative h-full">{children}</main>
+                <main className="mx-auto relative h-full">
+                    <QueryProvider>{children}</QueryProvider>
+                </main>
             </body>
         </html>
     );
