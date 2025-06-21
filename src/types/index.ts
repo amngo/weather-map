@@ -1,3 +1,5 @@
+import type { Feature, MultiPolygon, Polygon } from 'geojson';
+
 export type WeatherCode =
     | 0
     | 1
@@ -120,7 +122,8 @@ export interface WeatherData {
             us_aqi: number;
         };
     };
-    alert: WeatherAlertFeature | null;
+    alert?: WeatherAlertFeature;
+    boundaries?: Feature<Polygon | MultiPolygon>;
 }
 
 export interface Settings {

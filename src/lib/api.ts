@@ -1,4 +1,5 @@
 import { Settings, WeatherAlertFeatureCollection } from '@/types';
+import { FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 
 export async function getGeocoding(q: string) {
     const params = new URLSearchParams({
@@ -25,10 +26,21 @@ export async function getBoundaries(lat: number, lng: number) {
         const response = await fetch(
             `https://api.geoapify.com/v1/boundaries/part-of?${params.toString()}`
         );
-        return await response.json();
+
+        const data: FeatureCollection<Polygon | MultiPolygon> =
+            await response.json();
+
+        const found = data.features.find((feature) => {
+            const properties = feature.properties;
+            return properties?.categories.includes(
+                'administrative.district_level'
+            );
+        });
+
+        return found;
     } catch (error) {
         console.error('Error fetching boundaries data:', error);
-        throw error;
+        return undefined;
     }
 }
 
@@ -106,10 +118,10 @@ export async function getAlerts(lat: number, lng: number) {
         );
         const alerts: WeatherAlertFeatureCollection = await response.json();
 
-        if (alerts.features.length === 0) return null;
+        if (alerts.features.length === 0) return undefined;
 
         return alerts.features[0];
     } catch {
-        return null;
+        return undefined;
     }
 }

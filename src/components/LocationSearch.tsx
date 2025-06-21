@@ -66,8 +66,8 @@ export default function LocationSearch() {
             map?.flyTo({
                 center: [location.longitude, location.latitude],
                 zoom: 16,
-                speed: 4,
-                curve: 1,
+                speed: 2,
+                curve: 1.42,
             });
         }
     }, [location, map]);
